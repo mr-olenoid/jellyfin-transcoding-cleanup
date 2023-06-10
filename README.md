@@ -2,7 +2,9 @@
 
 Create ramdisk transcode directory
 /etc/fstab
+```
 tmpfs	/var/lib/jellyfin/transcodes	tmpfs	defaults,noatime,size=2g 0 0
+```
 
 Install dependency 
 pip install asyncinotify
