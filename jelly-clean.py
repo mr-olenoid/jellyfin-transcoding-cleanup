@@ -8,17 +8,25 @@ stream_cursor = {}
 
 async def scroll_control():
     while True:
-        files = os.listdir(cache_dir)
-        for file in files:
-            if file[-4:] != 'm3u8':
-                if stream_cursor[file[:32]] > int(file.split('.')[0][32:]):
-                    print("Dangling file - " + file)
-                    os.remove(os.path.join(cache_dir,file))
+        if len(stream_cursor) > 0: #chill if no stream are running
+            files = os.listdir(cache_dir)
+            for file in files:
+                if file[-4:] != 'm3u8':
+                    if stream_cursor[file[:32]] != 0 and ( stream_cursor[file[:32]] > int(file[32:-3]) or stream_cursor[file[:32]] + 100 < int(file[32:-3]) ):
+                        #print("Dangling file - " + file)
+                        os.remove(os.path.join(cache_dir,file))
         await asyncio.sleep(15)
+
+async def lazy_clenaup():
+    while True:
+        print(stream_cursor)
+        stream_cursor.clear()
+        await asyncio.sleep(60 * 60)
 
 async def main():
     with Inotify() as inotify:
         asyncio.create_task(scroll_control())
+        asyncio.create_task(lazy_clenaup())
         # Adding the watch can also be done outside of the context manager.
         # __enter__ doesn't actually do anything except return self.
         # This returns an asyncinotify.inotify.Watch instance
