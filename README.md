@@ -1,6 +1,6 @@
 # jellyfin-transcoding-cleanup
 
-Create ramdisk transcode directory
+Create ramdisk for transcode directory
 /etc/fstab
 ```
 tmpfs	/var/lib/jellyfin/transcodes	tmpfs	defaults,noatime,size=2g 0 0
